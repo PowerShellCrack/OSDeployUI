@@ -1,0 +1,8 @@
+!/Archive/
+/Archive/*
+!/.vscode/
+/.vscode/*
+!/Sources/
+/Sources/*
+*.code-workspace
+*.zip
