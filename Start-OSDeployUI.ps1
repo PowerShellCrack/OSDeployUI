@@ -261,6 +261,126 @@ Function Show-OSDeployUI{
     <ResourceDictionary>
 
 
+        <ControlTemplate x:Key="ComboBoxToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border"
+                    Grid.ColumnSpan="2"
+                    BorderThickness="1">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="#FF1D3245"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="White"/>
+                    </Border.Background>
+                </Border>
+                <Border Grid.Column="0"
+                    Margin="1" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="LightBlue"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="LightGray"/>
+                    </Border.Background>
+                </Border>
+                <Path x:Name="Arrow"
+                  Grid.Column="1"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z" 
+                  Fill="#444444">
+                </Path>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="SimpleComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                        Template="{StaticResource ComboBoxToggleButtonStyle}"
+                                        Grid.Column="2"
+                                        Focusable="false"
+                                        ClickMode="Press"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <ContentPresenter x:Name="ContentSite"
+                                            IsHitTestVisible="False"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                            Margin="3,3,23,3"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Left">
+                            </ContentPresenter>
+                            <TextBox x:Name="PART_EditableTextBox"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Bottom"
+                                   Margin="3,3,23,3"
+                                   Focusable="True"
+                                   Background="White"
+                                   Visibility="Hidden"
+                                   IsReadOnly="{TemplateBinding IsReadOnly}" >
+                                <TextBox.Template>
+                                    <ControlTemplate TargetType="TextBox" >
+                                        <Border Name="PART_ContentHost" Focusable="False" />
+                                    </ControlTemplate>
+                                </TextBox.Template>
+                            </TextBox>
+                            <Popup x:Name="Popup"
+                                 Placement="Bottom"
+                                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                                 AllowsTransparency="False"
+                                 Focusable="False"
+                                 PopupAnimation="Slide">
+                                <Grid x:Name="DropDown"
+                                  Background="White"
+                                  SnapsToDevicePixels="True"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                        BorderThickness="1">
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
+                                        </Border.BorderBrush>
+                                        <Border.Background>
+                                            <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                                        </Border.Background>
+                                    </Border>
+                                    <ScrollViewer Margin="4,6,4,6"
+                                              SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="True">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 
         <!-- Sub TabItem Style -->
         <!-- TabControl Style-->
@@ -484,19 +604,19 @@ Function Show-OSDeployUI{
 <Grid>
     <Label Content="2021 osd.osdeploy.com, GNU GPL 3.0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="8" Foreground="#FFCBCACA" HorizontalContentAlignment="Right" Margin="0,10,10,0" Width="235"/>
     <Label x:Name="lblVersion" Content="ver 1.0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="8" Foreground="#FFCBCACA" HorizontalContentAlignment="Right" Margin="0,22,10,0" Width="235"/>
-    <Image x:Name="imgLogo" HorizontalAlignment="Center" VerticalAlignment="Top" Source=".\Resources\osdlogo.png" Height="72" Width="Auto" Margin="422,22,416,0"/>
+    <Image x:Name="imgLogo" HorizontalAlignment="Center" VerticalAlignment="Top" Source=".\resources\osdlogo.png" Height="72" Width="Auto" Margin="422,22,416,0"/>
     <TextBlock HorizontalAlignment="Center" Text="Operating System Deployment in the Cloud" VerticalAlignment="Top" FontSize="48" Margin="10,82,15,0" TextAlignment="Center" FontFamily="Segoe UI Light" Width="999"/>
     <TextBlock HorizontalAlignment="Center" Text="Let's get the basic things out of the way" VerticalAlignment="Top" FontSize="16" FontFamily="Segoe UI Light" Margin="15,148,10,0" TextAlignment="Center" Height="26" Width="999"/>
 
     <Label x:Name="lblOSBuild" Content="Which Operating System build would you like to deploy?" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top" Width="446" HorizontalContentAlignment="Left" Margin="30,199,548,0"/>
     <Label Content="Build" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top" Width="85" HorizontalContentAlignment="Right" Margin="51,235,888,0" FontWeight="Bold" Foreground="Red"/>
-    <ComboBox x:Name="cmbOSBuildList" HorizontalAlignment="Center" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" Margin="146,235,514,0" />
+    <ComboBox x:Name="cmbOSBuildList" HorizontalAlignment="Center" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" Margin="146,235,514,0" Style="{DynamicResource SimpleComboBoxStyle}" />
     <Label x:Name="lblOSEdition" Content="What Edition will this Operating System be?" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top"  Width="446" HorizontalContentAlignment="Left" Margin="30,295,548,0"  />
     <Label Content="Edition" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top" Width="85" HorizontalContentAlignment="Right" Margin="51,332,888,0" FontWeight="Bold" Foreground="Red"/>
-    <ComboBox x:Name="cmbOSEditionList" HorizontalAlignment="Center" Margin="146,332,514,0" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" />
+    <ComboBox x:Name="cmbOSEditionList" HorizontalAlignment="Center" Margin="146,332,514,0" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" Style="{DynamicResource SimpleComboBoxStyle}" />
     <Label x:Name="lblOSLanguage" Content="What will the default Language be?" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top" Width="480" HorizontalContentAlignment="Left" Margin="30,389,514,0"/>
     <Label Content="Language" HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Top" Width="84" HorizontalContentAlignment="Right" Margin="52,420,888,0" FontWeight="Bold" Foreground="Red"/>
-    <ComboBox x:Name="cmbOSLanguageList" HorizontalAlignment="Center" Margin="146,422,514,0" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" />
+    <ComboBox x:Name="cmbOSLanguageList" HorizontalAlignment="Center" Margin="146,422,514,0" VerticalAlignment="Top" Width="364" Height="30" FontSize="18" Style="{DynamicResource SimpleComboBoxStyle}" />
 
     <GroupBox Header="Additional Options" HorizontalAlignment="Left" Height="181" Margin="745,195,0,0" VerticalAlignment="Top" Width="246" Foreground="Gray" />
     <CheckBox x:Name="chkSkipODT"  Content="Skip Office 365 Install" HorizontalAlignment="Center" Margin="791,226,73,0" VerticalAlignment="Top" Width="160" Style="{DynamicResource SliderCheckBox}" />
